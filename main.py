@@ -6,6 +6,8 @@ import redis
 
 from commands.keep import keep
 from commands.responses import response_to_boblin
+from commands.show import show
+from commands.remove import remove
 
 load_dotenv()
 
@@ -51,43 +53,14 @@ async def on_message(message):
             await keep(boblin_command, redis, message)
             
         # SHOW COMMAND
-        if boblin_command.startswith('show'):
-                        
+        if boblin_command.startswith('show'):       
             item_to_show = boblin_command[5:].strip()
-            
-            if item_to_show == 'all':
-                keys = redis.keys(f'{message.author}:*')
-                if len(keys) > 0:
-                    embed = discord.Embed(title = f'{message.author}\'s storage', description = 'description', color = 0xd9b99b)
-                    for key in keys:
-                        embed.add_field(name = 'Item', value = redis.get(key).decode('utf-8'), inline = True )
-                    await message.channel.send(embed=embed)
-                else:
-                    await message.channel.send('There is nothing on me you poor bastard')
-                    
-            if item_to_show != 'all':        
-                if redis.exists(f'{message.author}:{item_to_show}'):
-                    await message.channel.send(f'Here you go: {item_to_show}')
-                else:
-                    await message.channel.send(f'I don\'t have no {item_to_show}')
+            await show(item_to_show, message, redis)
         
         # REMOVE COMMAND
         if boblin_command.startswith('remove'):
             item_to_remove = boblin_command[7:].strip()
-            if item_to_remove == 'all':
-                keys = redis.keys(f'{message.author}:*')
-                if len(keys) > 0:
-                    for key in keys:
-                        print(key.decode('utf-8'))
-                        redis.delete(key.decode('utf-8'))
-                    await message.channel.send('Okay. I\'ll remove all your junk')
-                else:
-                    await message.channel.send('You don\'t have anything I could remove.')
-                    
-            if item_to_remove != 'all':    
-                if redis.exists(f'{message.author}:{item_to_remove}'):
-                    redis.delete(f'{message.author}:{item_to_remove}')
-                    await message.channel.send('aaaand... it\'s gone.')
+            await remove(item_to_remove, message, redis)
                 
 client.run(os.getenv('TOKEN'))
     

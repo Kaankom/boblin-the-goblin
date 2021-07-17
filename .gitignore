@@ -1,0 +1,5 @@
+.env
+informations.md
+dump.rdb
+
+/commands/__pycache__

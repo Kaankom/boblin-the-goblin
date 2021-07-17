@@ -3,7 +3,7 @@ from random import randrange
 
 
 words = ['yes', 'what', 'yeah', 'what can humble boblin do for you', 'hmm', 'ya', 'yeah, what', 'WHAT']
-grants = ['sigh...', '...', 'ohh god, leave me al...', 'go die...', 'stupid, stinky fu...', 'I hope you die...', '...']
+grants = ['sigh...', '...', 'ohh god, leave me al...', 'go die...', 'stupid, stinky s...', 'I hope you die...', '...']
 
 def get_word():
     return words[randrange(0, len(words))]
